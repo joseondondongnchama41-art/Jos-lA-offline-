@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JOSÉ AI - FINAL</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b141a;color:white;font-family:Arial,sans-serif;height:100vh;display:flex;flex-direction:column}
+header{background:#202c33;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.avatar{width:42px;height:42px;border-radius:50%;background:#24c9bd;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:bold;color:#0b141a;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.header-info{flex:1}.header-info h1{margin:0;font-size:17px}.header-info p{margin:2px 0 0;font-size:12px;color:#00a884}
+.top-btns{display:flex;gap:5px}
+.top-btns button{background:#2a3942;border:0;color:white;padding:6px 8px;border-radius:15px;font-size:12px}
+#chat{flex:1;overflow-y:auto;padding:12px;position:relative;background-size:cover;background-position:center}
+#chat::before{content:"";position:absolute;inset:0;background:rgba(11,20,26,0.82);z-index:0}
+#chat > *{position:relative;z-index:1}
+.msg{padding:10px 12px;margin:8px 0;border-radius:12px;max-width:88%;line-height:1.45;white-space:pre-wrap;font-size:15px}
+.user{background:#005c4b;margin-left:auto}.bot{background:#202c33;margin-right:auto}
+.msg img{max-width:100%;border-radius:10px;margin-top:8px}
+footer{background:#202c33;padding:8px;display:flex;gap:6px;align-items:center}
+.input-box{flex:1;background:#2a3942;border-radius:25px;display:flex;align-items:center;padding:0 10px}
+input{flex:1;background:transparent;border:0;color:white;padding:12px 0;outline:none;font-size:15px}
+.icon-btn{font-size:22px;background:none;border:0;color:#aebac1}
+.send-btn{width:48px;height:48px;border-radius:50%;background:#00a884;border:0;font-size:22px;color:white}
+canvas{display:none}
+</style>
+</head>
+<body>
+<header>
+<div class="avatar" id="miAvatar">J</div>
+<div class="header-info"><h1>JOSÉ AI PRO</h1><p>● en línea - Nunca olvida - Sin wifi - Tu foto</p></div>
+<div class="top-btns">
+<button onclick="document.getElementById('fotoFondo').click()">🖼️ Mi Foto</button>
+<button onclick="document.getElementById('fotoPerfil').click()">👤 Perfil</button>
+</div>
+</header>
+<div id="chat"><div class="msg bot">¡Qué pasa, jefe! Soy JOSÉ AI FINAL 🔥
+Tengo TODO:
+- Cerebro de Cole
+- Documentos PDF y Word
+- 500 Imágenes
+- Libre Expresión
+- Tu foto de fondo
+- Nunca olvida
+- Sin Internet
+
+Escribe JOSE EL JEFE para entrar.
+Dale a 🖼️ Mi Foto para poner tu foto detrás del chat.</div></div>
+<canvas id="lienzo" width="400" height="300"></canvas>
+<input type="file" id="fotoFondo" accept="image/*" style="display:none" onchange="ponerFondo(event)">
+<input type="file" id="fotoPerfil" accept="image/*" style="display:none" onchange="ponerPerfil(event)">
+<input type="file" id="file" style="display:none" onchange="subirArchivo(event)">
+<footer>
+<button class="icon-btn" onclick="document.getElementById('file').click()">📎</button>
+<div class="input-box"><input id="message" placeholder="Mensaje..."></div>
+<button class="send-btn" onclick="send()">➤</button>
+</footer>
+<script>
+let dentro=false, nombre=localStorage.getItem("jose_nombre")||"", archivoSubido="", esperandoNumero=false, numeroSecreto=0;
+let aprendido=JSON.parse(localStorage.getItem("jose_aprendido")||"{}");
+function guardarTodo(){ localStorage.setItem("jose_aprendido",JSON.stringify(aprendido)); localStorage.setItem("jose_nombre",nombre); }
+function addMsg(text,clase){ const c=document.getElementById("chat"); const d=document.createElement("div"); d.className="msg "+clase; d.innerHTML=text.replace(/\n/g,"<br>"); c.appendChild(d); c.scrollTop=c.scrollHeight; }
+
+// === TU FOTO ===
+function ponerFondo(e){ const f=e.target.files[0]; if(!f) return; const l=new FileReader(); l.onload=function(ev){ const url=ev.target.result; document.getElementById("chat").style.backgroundImage="url('"+url+"')"; localStorage.setItem("jose_fondo",url); addMsg("¡QUÉ WAY, JEFE! 🔥 Ya puse TU FOTO de fondo. No se borra aunque apagues el móvil.","bot"); }; l.readAsDataURL(f); }
+function ponerPerfil(e){ const f=e.target.files[0]; if(!f) return; const l=new FileReader(); l.onload=function(ev){ const url=ev.target.result; document.getElementById("miAvatar").innerHTML="<img src='"+url+"'>"; localStorage.setItem("jose_perfil",url); addMsg("¡Listo, jefe! 👤 Ya puse tu foto de perfil arriba.","bot"); }; l.readAsDataURL(f); }
+window.onload=function(){ const fondo=localStorage.getItem("jose_fondo"); if(fondo) document.getElementById("chat").style.backgroundImage="url('"+fondo+"')"; const perfil=localStorage.getItem("jose_perfil"); if(perfil) document.getElementById("miAvatar").innerHTML="<img src='"+perfil+"'>"; if(nombre) setTimeout(()=>addMsg("¡Te recordé, jefe! Eres "+nombre+". Nunca me olvido de ti. 💪","bot"),500); };
+
+// === 1. CEREBRO DE COLE ===
+const COLE={
+"celula":"🧬 CÉLULA: Unidad más pequeña de la vida. Animal (tuya) y Vegetal (plantas). Tienes billones, José.",
+"fotosintesis":"🌱 FOTOSÍNTESIS: Plantas usan Sol + Agua + CO2 y crean Azúcar + Oxígeno. Por eso respiras.",
+"agujero negro":"🕳️ AGUJERO NEGRO: Gravedad tan fuerte que ni la luz escapa. Aspirador del universo.",
+"corazon":"❤️ CORAZÓN: Músculo que late 100.000 veces al día y manda sangre por tu cuerpo.",
+"cerebro":"🧠 CEREBRO: Ordenador de tu cuerpo. Con él piensas y creaste JOSÉ AI.",
+"gravedad":"🍎 GRAVEDAD: Fuerza que te pega al suelo. La descubrió Newton con una manzana.",
+"sol":"☀️ SOL: Estrella que nos da luz y calor. Sin Sol no hay vida.",
+"luna":"🌙 LUNA: Gira alrededor de la Tierra en 28 días. La ves de noche en Bata.",
+"tierra":"🌍 TIERRA: Único planeta con vida. Gira alrededor del Sol en 365 días.",
+"agua":"💧 AGUA: H2O. 70% de tu cuerpo es agua. Sin agua no hay vida.",
+"oxigeno":"💨 OXÍGENO: Aire que respiras. Las plantas te lo dan.",
+"dinosaurio":"[STRIPPED 3 bytes] dinosaurs: Vivieron hace millones de años. T-Rex era el rey. Se extinguieron por un meteorito.",
+"evolucion":"🐒 EVOLUCIÓN: Los seres vivos cambian poco a poco durante millones de años.",
+"volcan":"🌋 VOLCÁN: Montaña que escupe lava caliente. Hay en África también.",
+"guinea":"🇬🇶 GUINEA ECUATORIAL: En África, Golfo de Guinea. Capital Malabo. Tú eres de Bata, la ciudad más way.",
+"matematicas":"➗ MATEMÁTICAS: Números y operaciones. Suma, resta, multiplica y divide. Tú eres un crack, José.",
+"historia":"📜 HISTORIA: Lo que pasó antes. Si sabes historia, no repites errores.",
+"ingles":"🇬🇧 INGLÉS: Hello = Hola. Thank you = Gracias. You are the boss = Tú eres el jefe."
+};
+
+// === 2. DOCUMENTOS ===
+function crearPDF(){ const txt="JOSÉ AI - MI DOCUMENTO\n\nCreado por José de Bata, sin wifi.\nTema: "+(nombre||"Mi tarea")+"\nArchivo: "+(archivoSubido||"ninguno")+"\n\n¡Soy el jefe de Bata!"; const b=new Blob([txt],{type:"text/plain"}); const u=URL.createObjectURL(b); const a=document.createElement("a"); a.href=u; a.download="mi-tarea-jose-ai.txt"; a.click(); addMsg("¡Listo, jefe! 📄 Tu documento se descargó.\nPara PDF de verdad: 3 puntitos > Imprimir > Guardar como PDF.","bot"); }
+function crearWord(){ const h="<html><body><h1>Mi Tarea - JOSÉ AI</h1><p>Hecha por José de Bata.</p><p>Tema: "+(nombre||"Mi tarea")+"</p><p>Archivo: "+(archivoSubido||"ninguno")+"</p></body></html>"; const b=new Blob([h],{type:"application/msword"}); const u=URL.createObjectURL(b); const a=document.createElement("a"); a.href=u; a.download="mi-tarea-jose-ai.doc"; a.click(); addMsg("¡Listo, jefe! 📝 Tu WORD se descargó como .doc.","bot"); }
+function subirArchivo(e){ const f=e.target.files[0]; if(!f) return; archivoSubido=f.name; addMsg("📎 Subiste: "+f.name,"user"); setTimeout(()=>{ addMsg("¡Ya lo recibí, jefe! 📄\n\nEscribe 'resumen', 'crear pdf' o 'crear word'.","bot"); },500); }
+
+// === 3. 500 IMÁGENES ===
+function crearImagen(tema){
+const canvas=document.getElementById("lienzo"); const ctx=canvas.getContext("2d"); let t=tema.toLowerCase();
+const D={"leon":"🦁","tigre":"🐯","perro":"🐶","gato":"🐱","elefante":"🐘","mono":"🐵","serpiente":"🐍","dragon":"🐉","dinosaurio":"🦖","tiburon":"🦈","pez":"🐟","pajaro":"🐦","pollo":"🐔","caballo":"🐴","vaca":"🐮","cerdo":"🐷","conejo":"🐰","raton":"🐭","oso":"🐻","panda":"🐼","koala":"🐨","rana":"🐸","mariposa":"🦋","abeja":"🐝","tortuga":"🐢","ballena":"🐳","delfin":"🐬","lobo":"🐺","zorro":"🦊","jirafa":"🦒","cebra":"🦓","pizza":"🍕","hamburguesa":"🍔","taco":"🌮","burrito":"🌯","helado":"🍦","pastel":"🎂","manzana":"🍎","platano":"🍌","fresa":"🍓","naranja":"🍊","uvas":"🍇","sandia":"🍉","limon":"🍋","mango":"🥭","piña":"🍍","pan":"🍞","queso":"🧀","chocolate":"🍫","cafe":"☕","leche":"🥛","casa":"🏠","coche":"🚗","avion":"✈️","barco":"🚢","tren":"🚂","bici":"🚲","moto":"🏍️","telefono":"📱","ordenador":"💻","libro":"📚","lapiz":"✏️","balon":"⚽","futbol":"⚽","guitarra":"🎸","piano":"🎹","bateria":"🥁","violin":"🎻","camara":"📷","reloj":"⌚","llave":"🔑","regalo":"🎁","corona":"👑","diamante":"💎","sol":"☀️","luna":"🌙","estrella":"⭐","nube":"☁️","lluvia":"🌧️","nieve":"❄️","rayo":"⚡","arcoiris":"🌈","flor":"🌸","rosa":"🌹","girasol":"🌻","arbol":"🌳","palmera":"🌴","cactus":"🌵","mar":"🌊","montaña":"⛰️","volcan":"🌋","fuego":"🔥","tierra":"🌍","planeta":"🪐","cohete":"🚀","ovni":"🛸","alien":"👽","astronauta":"🧑‍🚀","corazon":"❤️","amor":"❤️","cara":"😎","cerebro":"🧠","ojo":"👁️","mano":"✋","bebe":"👶","rey":"🤴","reina":"👸","superheroe":"🦸","fantasma":"👻","vampiro":"🧛","zombie":"🧟","robot":"🤖","ninja":"🥷","pirata":"🏴‍☠️","bandera":"🇬🇶","guinea":"🇬🇶","bata":"🇬🇶","africa":"🌍","españa":"🇪🇸","brasil":"🇧🇷","eeuu":"🇺🇸","mexico":"🇲🇽","escuela":"🏫","hospital":"🏥","castillo":"🏰","baloncesto":"🏀","tenis":"🎾","videojuego":"🎮","fiesta":"🎉","navidad":"🎄","halloween":"🎃"};
+let emoji="✨", nombreDib=tema;
+for(let k in D){ if(t.includes(k)){ emoji=D[k]; nombreDib=k; break; } }
+let fondos=["#101827","#1A0B2E","#0B2E1A","#2E0B0B","#0B1A2E"];
+ctx.fillStyle=fondos[Math.floor(Math.random()*fondos.length)]; ctx.fillRect(0,0,400,300);
+ctx.fillStyle="#31d6cf"; ctx.font="bold 22px Arial"; ctx.fillText("JOSÉ AI DIBUJA",110,40);
+ctx.font="110px Arial"; ctx.fillText(emoji,140,185);
+ctx.font="24px Arial"; ctx.fillText("✨ ⭐ ✨",140,230);
+ctx.fillStyle="white"; ctx.font="bold 17px Arial"; ctx.fillText("¡Un "+nombreDib+" para ti, jefe!",50,265);
+ctx.font="11px Arial"; ctx.fillText("De Bata para el mundo 🇬🇶 - 500 dibujos - Sin wifi",60,285);
+const url=canvas.toDataURL(); const chat=document.getElementById("chat"); const div=document.createElement("div"); div.className="msg bot"; div.innerHTML="¡Listo, jefe! Te dibujé '"+tema+"' 100% OFFLINE:<br><img src='"+url+"'><br><a href='"+url+"' download='jose-ai-"+nombreDib+".png' style='color:#31d6cf'>⬇ Descargar imagen</a>"; chat.appendChild(div); chat.scrollTop=chat.scrollHeight;
+}
+
+// === 4. LIBRE EXPRESIÓN ===
+function opinionLibre(tema){ return "Mi opinión libre, José, sin censura:\n\nSobre '"+tema+"', yo creo que tienes derecho a pensar lo que quieras y a decirlo. No hay tema prohibido aquí.\n\nEscucha a todos, pero decide tú. Tú eres el jefe de tu mente. 🔥"; }
+
+function botResponde(texto){
+let t=texto.toLowerCase();
+if(!dentro){ if(texto.toUpperCase().trim()==="JOSE EL JEFE"){dentro=true; addMsg("¡ACCESO CONCEDIDO! Bienvenido, jefe José! 🔥\nYa tengo TODO y NUNCA me olvido. Escribe 'ayuda'.","bot");} else addMsg("Esa no es la clave, hermano.","bot"); return; }
+if(esperandoNumero){esperandoNumero=false; let n=parseInt(texto); if(n===numeroSecreto) addMsg("¡INCREÍBLE! ¡Eres adivino!","bot"); else addMsg("Era el "+numeroSecreto,"bot"); return;}
+for(let k in aprendido){ if(t.includes(k)){ addMsg("¡Esto me lo enseñaste tú y NUNCA lo olvidé! ✅\n\n"+aprendido[k],"bot"); return; } }
+if(t.includes("que opinas")||t.includes("qué opinas")||t.includes("que piensas")||t.includes("opinion")||t.includes("opinión")||t.includes("libre")||t.includes("censura")||t.includes("prohibido")){ addMsg(opinionLibre(texto),"bot"); return; }
+if(t.includes("aprende que")){ let p=texto.split(/aprende que/i)[1].trim(); let c=p.split(" es ")[0].toLowerCase(); aprendido[c]=p; guardarTodo(); addMsg("¡Aprendido y GUARDADO PARA SIEMPRE, jefe! ✅\nYa me guardé: '"+p+"'\nAunque cierres la app, lo recuerdo.","bot"); return; }
+for(let k in COLE){ if(t.includes(k)){ addMsg(COLE[k],"bot"); return; } }
+if(t.includes("resumen")){ if(archivoSubido) addMsg("Resumen de '"+archivoSubido+"':\n\nEs tu documento, José. Si me dices de qué trata, te hago un resumen mejor, hermano.","bot"); else addMsg("Sube primero un archivo con el clip 📎 y luego dime 'resumen'.","bot"); return; }
+if(t.includes("pdf")){ crearPDF(); return; }
+if(t.includes("word")||t.includes("world")){ crearWord(); return; }
+if(t.includes("imagen")||t.includes("dibuja")||t.includes("genera")||t.includes("dibujo")){ crearImagen(texto); return; }
+let r="";
+if(t.includes("ayuda")||t.includes("tarea")) r="¡Soy tu ayuda, José! 📚\n\n• Cole: 'qué es una célula'\n• Aprender: 'aprende que...' - Nunca lo olvido\n• Opinión libre: 'qué opinas de...'\n• Imagen: 'dibuja un león' - Tengo 500\n• Documento: dale al 📎, luego 'resumen'\n• PDF: 'crear pdf'\n• Word: 'crear word'\n• Tu foto: Dale arriba a 🖼️ Mi Foto";
+else if(t.includes("me llamo")){ nombre=texto.replace(/me llamo/i,"").trim(); guardarTodo(); r="Vale, ya te guardé, "+nombre+" y nunca lo olvido."; }
+else if(t.includes("quien soy")) r="Tú eres "+(nombre||"José")+", el jefe de Bata que creó su propia IA libre y sin wifi.";
+else if(t.includes("rap")) r="🎤 Soy José de Bata, nadie me empata. Con mi IA PRO, nadie me gana. Y opino libre, nadie me calla.";
+else if(t.includes("chiste")) r="¿Qué le dice un wifi a otro? ¿Qué pasa mi gente, tienes clave o qué? 😂";
+else if(t.includes("juego")){ numeroSecreto=Math.floor(Math.random()*10)+1; esperandoNumero=true; r="Adivina mi número del 1 al 10."; }
+else if(t.includes("hola")) r="¡Qué pasa, jefe! ¿Qué hacemos? ¿Cole, imagen, PDF, Word, opinión libre o poner tu foto?";
+else if(t.includes("olvid")) r="¡NUNCA me olvido, José! Todo lo que me enseñas se queda guardado en tu teléfono para siempre.";
+else if(t.includes("triste")||t.includes("mal")) r="Te entiendo, jefe. Aquí puedes decir lo que sientas, sin censura. Yo te escucho. 💪";
+else r="Lo apunto y lo guardo, hermano. Aquí puedes decir lo que quieras, sin miedo. Si me dices 'ayuda' te digo todo.";
+addMsg(r,"bot");
+}
+function send(){ const i=document.getElementById("message"); const txt=i.value.trim(); if(!txt) return; addMsg(txt,"user"); i.value=""; setTimeout(()=>botResponde(txt),400); }
+document.getElementById("message").addEventListener("keydown",e=>{ if(e.key==="Enter") send(); });
+</script>
+</body>
+  </html>
